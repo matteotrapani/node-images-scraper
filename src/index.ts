@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
-import  * as streamToString from 'stream-to-string';
+import * as streamToString from 'stream-to-string';
 
 export const scrapeImages = async (url: string): Promise<string[]> => {
   if (url.indexOf('http') !== 0) url = 'http://' + url;
@@ -14,20 +14,18 @@ export const scrapeImages = async (url: string): Promise<string[]> => {
     const imagesElements = $('img');
     const images: string[] = [];
     if (imagesElements && imagesElements.length > 0) {
-      for(let i = 0; i < imagesElements.length; i++) {
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < imagesElements.length; i++) {
         const imgSrc = $(imagesElements[i]).attr('src');
-        if (imgSrc && checkValidUrl(imgSrc))
-          images.push(imgSrc);
+        if (imgSrc && checkValidUrl(imgSrc)) images.push(imgSrc);
       }
     }
 
     return images;
+  } catch (e) {
+    throw e;
   }
-  catch (e) {
-    console.error(e);
-    return [];
-  }
-}
+};
 
 const checkValidUrl = (str: string): boolean => {
   const urlRegex =
