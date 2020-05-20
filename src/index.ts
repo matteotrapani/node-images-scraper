@@ -16,12 +16,31 @@ export const scrapeImages = async (url: string): Promise<string[]> => {
     if (imagesElements && imagesElements.length > 0) {
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < imagesElements.length; i++) {
-        const imgSrc = $(imagesElements[i]).attr('src');
-        if (imgSrc && checkValidUrl(imgSrc)) images.push(imgSrc);
+        let imgSrc = $(imagesElements[i]).attr('src');
+        if (imgSrc && checkValidUrl(imgSrc)) {
+          images.push(imgSrc);
+        } else {
+          imgSrc = $(imagesElements[i]).attr('data-lazy-src');
+          if (imgSrc && checkValidUrl(imgSrc)) {
+            images.push(imgSrc);
+          }
+        }
       }
     }
 
     return images;
+  } catch (e) {
+    throw e;
+  }
+};
+export const getImageBlob = async (url: string): Promise<Blob> => {
+  if (url.indexOf('http') !== 0) url = 'http://' + url;
+  if (!checkValidUrl(url)) throw new Error('Image URL is not valid');
+
+  try {
+    const { blob } = await fetch(url);
+    const result = await blob();
+    return result as Blob;
   } catch (e) {
     throw e;
   }
