@@ -1,6 +1,6 @@
 {
   "name": "node-images-scraper",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Scrape images url from any site in nodeJS(already compatible with typescript)",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
