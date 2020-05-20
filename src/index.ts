@@ -1,34 +1,33 @@
-import * as puppeteer from 'puppeteer';
+import fetch from 'node-fetch';
+import * as cheerio from 'cheerio';
+import  * as streamToString from 'stream-to-string';
 
-export const scrapeImages = async (address: string): Promise<string[]> => {
-  if (address.indexOf('http') !== 0) address = 'http://' + address;
-  if (!checkValidUrl(address)) return [];
-  // the rest of the code must be enclosed in an `async` function to be able to `await` for results
-  const browser = await puppeteer.launch(); // launches an "invisible" chromium browser
-  const page = await browser.newPage(); // takes the browser to a new tab (page)
-  await page.goto(address); // takes the page to a specific url
+export const scrapeImages = async (url: string): Promise<string[]> => {
+  if (url.indexOf('http') !== 0) url = 'http://' + url;
+  if (!checkValidUrl(url)) return [];
 
-  // Get the "viewport" of the page,
-  // as reported by the page.
-  // NOTE: Anything inside of the `evaluate` function is DOM manipulation.
-  // No variables outside of the evaluate function can go in, and none can come out without being returned inside of the return object.
-  const images = await page.evaluate(() => {
-    const sources: string[] = []; // an array of images src
-    document.querySelectorAll('img').forEach((img) => {
-      if (img.src) {
-        sources.push(img.src);
+  try {
+    const { body } = await fetch(url);
+    const data = await streamToString(body);
+    const $ = cheerio.load(data);
+
+    const imagesElements = $('img');
+    const images: string[] = [];
+    if (imagesElements && imagesElements.length > 0) {
+      for(let i = 0; i < imagesElements.length; i++) {
+        const imgSrc = $(imagesElements[i]).attr('src');
+        if (imgSrc && checkValidUrl(imgSrc))
+          images.push(imgSrc);
       }
-    });
+    }
 
-    return {
-      sources,
-    };
-  });
-
-  // remember to close the broser (invisible chromium)
-  await browser.close();
-  return images.sources;
-};
+    return images;
+  }
+  catch (e) {
+    console.error(e);
+    return [];
+  }
+}
 
 const checkValidUrl = (str: string): boolean => {
   const urlRegex =

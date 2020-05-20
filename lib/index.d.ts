@@ -1,1 +1,1 @@
-export declare const scrapeImages: (address: string) => Promise<string[]>;
+export declare const scrapeImages: (url: string) => Promise<string[]>;
