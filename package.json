@@ -35,7 +35,6 @@
   "homepage": "https://github.com/matteotrapani/node-images-scraper#readme",
   "devDependencies": {
     "@types/jest": "^25.2.3",
-    "@types/node-fetch": "^2.5.7",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
     "ts-jest": "^26.0.0",
@@ -49,7 +48,7 @@
   "dependencies": {
     "@types/cheerio": "^0.22.18",
     "cheerio": "^1.0.0-rc.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.0.0-beta.5",
     "stream-to-string": "^1.2.0"
   }
 }

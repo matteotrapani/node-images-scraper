@@ -33,10 +33,11 @@ describe('scrapeImages', () => {
   });
 });
 
-// describe('getImageBlob', () => {
-//   test('getImageBlob', async () => {
-//     const result = await getImageBlob('https://thebluebirdkitchen.com/wp-content/uploads/2015/08/Bluebird_logo_neg1.png');
-//     expect(result).not.toBeNull();
-//     console.log(result);
-//   })
-// });
+describe('getImageBlob', () => {
+  test('getImageBlob', async () => {
+    const result = await getImageBlob(
+      'https://thebluebirdkitchen.com/wp-content/uploads/2015/08/Bluebird_logo_neg1.png',
+    );
+    expect(result).not.toBeNull();
+  });
+});

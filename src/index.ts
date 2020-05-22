@@ -1,8 +1,10 @@
-import fetch from 'node-fetch';
+import { Response } from 'node-fetch';
 import * as cheerio from 'cheerio';
 import * as streamToString from 'stream-to-string';
 
 export const scrapeImages = async (url: string): Promise<string[]> => {
+  const fetch = require('node-fetch');
+
   if (url.indexOf('http') !== 0) url = 'http://' + url;
   if (!checkValidUrl(url)) return [];
 
@@ -34,13 +36,19 @@ export const scrapeImages = async (url: string): Promise<string[]> => {
   }
 };
 export const getImageBlob = async (url: string): Promise<Blob> => {
+  const fetch = require('node-fetch');
+
   if (url.indexOf('http') !== 0) url = 'http://' + url;
   if (!checkValidUrl(url)) throw new Error('Image URL is not valid');
 
   try {
-    const { blob } = await fetch(url);
-    const result = await blob();
-    return result as Blob;
+    return fetch(url)
+      .then((data: Response) => {
+        return data.blob();
+      })
+      .then((blob: any) => {
+        return blob as Blob;
+      });
   } catch (e) {
     throw e;
   }
